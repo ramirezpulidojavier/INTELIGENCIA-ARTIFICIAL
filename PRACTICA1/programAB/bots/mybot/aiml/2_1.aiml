@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml>
+
+<!-- Regla 1 -->
+<category>
+<pattern>Hablame un poco de ti</pattern>
+<template>Me llamo Juan</template>
+</category>
+
+<!-- Regla 1.1 -->
+<category>
+<pattern>^ [habl+ cuenta+ di+ cont+] * [ti usted tu su eres] ^ </pattern>
+<template><srai>HABLAME UN POCO DE TI</srai></template>
+</category>
+
+<!-- Regla 1.2 -->
+<category>
+<pattern>^ [ti usted tu su] * [habl+ cuenta+ cont* di+] ^ </pattern>
+<template><srai>HABLAME UN POCO DE TI</srai></template>
+</category>
+
+<!-- Regla 2 -->
+<category>
+<pattern>Cual es tu mayor defecto</pattern>
+<template>Ser tan juanoso</template>
+</category>
+
+<!-- Regla 2.1 -->
+<category>
+<pattern>^ tu+ (mayor+) (gran+) (peor+) [defecto+ caracteristica+ carencia+]</pattern>
+<template><srai>CUAL ES TU MAYOR DEFECTO</srai></template>
+</category>
+
+<!-- Regla 2.2 -->
+<category>
+<pattern>^ tu (mayor) (gran) (peor) defecto</pattern>
+<template><srai>CUAL ES TU MAYOR DEFECTO</srai></template>
+</category>
+
+<!-- Regla 2.2 -->
+<category>
+<pattern>* [peor menos] ^ ti ^</pattern>
+<template><srai>CUAL ES TU MAYOR DEFECTO</srai></template>
+</category>
+
+<!--regla 3-->
+
+<category>
+        <pattern>Cuales son tus 3 mayores virtudes</pattern>
+        <template>
+            La puntualidad, la persistencia y la humildad.
+        </template>
+</category>
+
+<!--regla 3.1-->
+
+<category>
+    <pattern>  ^ [cualidad+ virtud+ ventaja+] ^</pattern>
+    <template>
+        <srai>CUALES SON TUS 3 MAYORES VIRTUDES</srai></template>
+</category>
+
+
+
+
+<!--regla 4-->
+
+<category>
+        <pattern>Te consideras una persona creativa</pattern>
+        <template>
+            Si, mucho. Ademas del trabajo me gusta llevar a cabo proyectos personales que mantengan activa mi imaginacion, es realmente util en la vida diaria a la hora de resolver problemas.
+        </template>
+</category>
+
+<!--regla 4.1-->
+
+<category>
+    <pattern> ^ [creativ+ invent+ imagina+] ^ </pattern>
+    <template>
+        <srai>TE CONSIDERAS UNA PERSONA CREATIVA</srai></template>
+</category>
+
+<!-- Regla 5 -->
+<category>
+<pattern>Por que deberiamos escogerte a ti</pattern>
+<template>porque si joder</template>
+</category>
+
+<!-- Regla 5.1 -->
+<category>
+<pattern>^ [escog+ seleccion+ elegir+ contratar+] ^ (ti) (usted) ^</pattern>
+<template><srai>POR QUE DEBERIAMOS ESCOGERTE A TI</srai></template>
+</category>
+
+<!-- Regla 5.2 -->
+<category>
+<pattern>^ [escog+ seleccion+ elegir+ contratar+] ^ (ti) (usted) ^</pattern>
+<template><srai>POR QUE DEBERIAMOS ESCOGERTE A TI</srai></template>
+</category>
+
+<!-- Regla 5.3 -->
+<category>
+<pattern> [Cual Que Porque] ^ [razon motivo causa] ^</pattern>
+<template><srai>POR QUE DEBERIAMOS ESCOGERTE A TI</srai></template>
+</category>
+
+</aiml>
+

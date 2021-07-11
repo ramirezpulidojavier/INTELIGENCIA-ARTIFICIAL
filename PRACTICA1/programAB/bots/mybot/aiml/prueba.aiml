@@ -1,0 +1,1406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml>
+
+<!-- Regla 1 -->
+<category>
+<pattern>^ <set>day</set> ^ <set>month_es</set> (de 2020) ^</pattern>
+<template>
+        <think><set name="mes"><map name="month_index_ES"><star index="4"/></map></set></think>
+        <think><set name="dia"><map name="day_index"><star index="2"/></map></set></think>
+        <think><set name="date"><get name="dia"/>-<get name="mes"/>-20</set></think>
+        <think><set name="trozo"><srai>LIST OF DAY <get name="date"/></srai></set></think>
+        <think><set name="hora"><srai>ORDINAL 13:00</srai></set></think>
+        <think><set name="intervalo"><srai>SUBLIST FROM 9 TO 21 OF <get name="trozo"/></srai></set></think>
+        <think><set name="probando"><srai>CONVERTIR A HORA 7</srai></set></think>
+        <think><set var="horario"><srai>HORAS LIBRES DEL <get name="date"/></srai></set></think>
+        <think><set var="validada"><srai>VALIDAR FECHA <get name="date"/></srai></set></think>
+        <think><set name="total">0</set></think>
+
+
+
+        
+        <condition var="validada">
+            
+            <li value="La fecha es True">
+
+                <condition var="horario">
+                    
+                    <li value="ocupado">
+                        
+                        Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+
+                    </li>
+
+
+                    <li>
+
+                         <think><set name="morning"></set>
+                            <set name="afternoon"></set>
+                            
+                            <set var="copia"><get var="horario"/></set>
+                            <set var="copia"><get var="copia"/> fin</set>
+                            <set var="valor"><first><get var="copia"/></first></set>
+                            <set var="aux1">0</set>
+                            <set var="aux2">0</set>
+
+                            </think>
+                            <condition var="valor">
+                                
+                                <li value="fin"></li>
+
+                                <li>
+                                    <think>
+                                    <set var="aux"><srai>ORDINAL <get var="valor"/></srai></set>
+                                    <set var="mt"><map name="maniana_tarde"><get var="aux"/></map></set>
+                                    </think>
+
+                                    <condition var="mt">
+                                        
+                                            <li value="maniana">
+
+                                                <think>
+                                                <set name="morning"><get name="morning"/> <get var="valor"/></set>
+                                                <set var="aux1">2</set>
+                                                </think>
+                                            </li>
+                                            <li>
+                                                <think>
+                                                <set name="afternoon"><get name="afternoon"/> <get var="valor"/></set>
+                                                <set var="aux2">3</set>
+                                                </think>
+                                            </li>
+
+                                            
+
+
+                                    </condition>
+                                    <think>
+                                    <set var="copia"><rest><get var="copia"/></rest></set>
+                                    <set var="valor"><first><get var="copia"/></first></set>
+                                    </think>
+                                <loop/>
+
+                                </li>
+
+
+                            </condition>
+
+                            <think><set name="total"><srai>SUMA <get var="aux1"/> <get var="aux2"/></srai></set></think>
+
+                            <condition name="total">
+
+                                <li value="2">
+                                    Solo hay citas por la maniana, las horas son: <get name="morning"/>
+¿Quiere Alguna?
+                                </li>
+
+                                <li value="3">
+                                    Solo hay citas por la tarde, las horas son: <get name="afternoon"/>
+¿Desea Alguna?
+                                </li>
+
+                                <li>
+                                    Perfecto. Tenemos hueco, ¿prefieres por la tarde o por la maniana?
+                                </li>
+
+                            </condition>
+
+                            
+
+                         
+
+                    </li>
+
+
+
+
+                </condition>
+
+
+
+
+            </li>
+            <li>Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?</li> 
+
+
+        </condition>
+
+        <think> 
+                <set name="morning2"><get name="morning"/> fin</set>
+                <set name="afternoon2"><get name="afternoon"/> fin</set>
+        </think>
+
+
+</template>
+</category>
+
+
+<category>
+<pattern>^ [maniana] ^</pattern><that>^ ¿Prefieres por la tarde o por la maniana</that>
+<template>
+    Okay, las horas son: <get name="morning"/>
+
+
+    ¿Quiere alguna?
+</template>
+</category>
+
+
+<category>
+<pattern>^ [tarde] ^</pattern><that>^ ¿Prefieres por la tarde o por la maniana</that>
+<template>
+    De acuerdo, las horas son: <get name="afternoon"/>
+
+
+    ¿Desea alguna?
+</template>
+</category>
+
+<category>
+<pattern>^ [igual importa cualquiera sea] ^</pattern><that>^ ¿Prefieres por la tarde o por la maniana</that>
+<template>
+    ¿Te viene bien por la maniana?
+</template>
+</category>
+
+<category>
+<pattern>^ [Si De Vale Correcto Ok Hecho Claro Efectivamente Por esta Perfecto Estupendo Venga] (acuerdo) (supuesto) (bien) ^</pattern><that>^ ¿Te viene bien por la maniana ^</that>
+<template>
+    Okay, las horas son: <get name="morning"/>
+
+
+    ¿Quiere alguna?
+</template>
+</category>
+
+<category>
+<pattern>^ [no dejalo olvidalo negativo paso] ^</pattern><that>^ ¿Te viene bien por la maniana ^</that>
+<template>
+    ¿Te viene bien por la tarde?
+</template>
+</category>
+
+<category>
+<pattern>^ [Si De Vale Correcto Ok Hecho Claro Efectivamente Por esta Perfecto Estupendo Venga] (acuerdo) (supuesto) (bien) ^</pattern><that>^ ¿Te viene bien por la tarde ^</that>
+<template>
+    Okay, las horas son: <get name="afternoon"/>
+
+
+    ¿Desea alguna?
+</template>
+</category>
+
+<category>
+<pattern>^ [no dejalo olvidalo negativo paso] ^</pattern><that>^ ¿Te viene bien por la tarde ^</that>
+<template>
+    Siento que no haya citas en esta fecha para usted, ¿quieres probar otra fecha?
+</template>
+</category>
+
+
+<category>
+<pattern>^</pattern><that>^ ¿Prefieres por la tarde o por la maniana</that>
+<template>
+    Lo siento, esa no es una respuesta valida. ¿Prefieres por la tarde o por la maniana?
+</template>
+</category>
+
+
+<category>
+<pattern>[Si De Vale Correcto Ok Hecho Claro Efectivamente Por esta Perfecto Estupendo Venga] (acuerdo) (supuesto) (bien) </pattern><that>* ¿Quiere alguna</that>
+<template>
+    ¿Cual quieres de la maniana?
+</template>
+</category>
+
+<category>
+<pattern>^ <set>hour_lvl1_ma</set> ^</pattern><that>¿Cual quieres de la maniana</that>
+<template>
+    
+    <think><set var="booleana"><srai>IS BUSY DAY <get name="date"/> AT <star index="2"/></srai></set></think>
+
+    <condition var="booleana">
+        
+        <li value="FALSE">
+            Perfecto, su cita ha sido fijada el <get name="date"/> a las <star index="2"/>
+
+            <think><srai>MARK OCUPADO AT <star index="2"/> ON <get name="date"/></srai></think>
+        </li>
+        <li>
+            Esa hora no esta disponible, ¿quieres meter otra hora?
+        </li>
+
+    </condition>
+
+</template>
+</category>
+
+<category>
+<pattern>^</pattern><that>¿Cual quieres de la maniana</that>
+<template>
+    Esa hora no esta disponible, ¿quieres meter otra hora?
+</template>
+</category>
+
+<category>
+<pattern>^ [no dejalo olvidalo negativo paso] ^ </pattern><that>Esa hora no esta disponible, ¿quieres meter otra hora</that>
+<template>
+    Siento que no haya citas en esta fecha para usted, ¿quieres probar otra fecha?
+</template>
+</category>
+
+
+<category>
+<pattern> [Si De Vale Correcto Ok Hecho Claro Efectivamente Por esta Perfecto Estupendo Venga] </pattern><that>Esa hora no esta disponible, ¿quieres meter otra hora</that>
+<template>
+    ¿Cual quieres de la maniana?
+</template>
+</category>
+
+<category>
+<pattern>^ <set>hour_lvl1_ma</set> ^</pattern><that>Esa hora no esta disponible, ¿quieres meter otra hora</that>
+<template>
+    <think><set var="booleana"><srai>IS BUSY DAY <get name="date"/> AT <star index="2"/></srai></set></think>
+
+    <condition var="booleana">
+        
+        <li value="FALSE">
+            Perfecto, su cita ha sido fijada el <get name="date"/> a las <star index="2"/>
+
+            <think><srai>MARK OCUPADO AT <star index="2"/> ON <get name="date"/></srai></think>
+        </li>
+        <li>
+            Esa hora no esta disponible, ¿quieres meter otra hora?
+        </li>
+
+    </condition>
+</template>
+</category>
+
+<category>
+<pattern>^ </pattern><that>Esa hora no esta disponible, ¿quieres meter otra hora</that>
+<template>
+    Esa hora no esta disponible, ¿quieres meter otra hora?
+</template>
+</category>
+
+
+<category>
+<pattern>^ <set>hour_lvl1_ma</set> ^</pattern><that>^ ¿Quiere alguna</that>
+<template>
+     <think><set var="booleana"><srai>IS BUSY DAY <get name="date"/> AT <star index="2"/></srai></set></think>
+
+    <condition var="booleana">
+        
+        <li value="FALSE">
+            Perfecto, su cita ha sido fijada el <get name="date"/> a las <star index="2"/>
+
+            <think><srai>MARK OCUPADO AT <star index="2"/> ON <get name="date"/></srai></think>
+        </li>
+        <li>
+            Esa hora no esta disponible, ¿quieres meter otra hora?
+        </li>
+
+    </condition>
+</template>
+</category>
+
+<category>
+<pattern>^</pattern><that>* ¿Quiere alguna</that>
+<template>
+    Esa hora no esta disponible, ¿quieres meter otra hora?
+</template>
+</category>
+
+<category>
+<pattern>^ [no dejalo olvidalo negativo paso] ^</pattern><that>* ¿Quiere alguna</that>
+<template>
+    Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha
+</template>
+</category>
+
+<category>
+<pattern>Me da igual</pattern><that>* ¿Quiere alguna</that>
+<template>
+    Pues nos vemos hente.
+</template>
+</category>
+
+
+<!-- SEPARACION TARDE Y MANIANA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->
+
+
+    <category>
+<pattern>[Si De Vale Correcto Ok Hecho Claro Efectivamente Por esta Perfecto Estupendo Venga] (acuerdo) (supuesto) (bien) </pattern><that>* ¿Desea alguna</that>
+<template>
+    ¿Cual quieres de la tarde?
+</template>
+</category>
+
+<category>
+<pattern>^ <set>hour_lvl1_ta</set> ^</pattern><that>¿Cual quieres de la tarde</that>
+<template>
+    
+    <think><set var="booleana"><srai>IS BUSY DAY <get name="date"/> AT <star index="2"/></srai></set></think>
+
+    <condition var="booleana">
+        
+        <li value="FALSE">
+            Perfecto, su cita ha sido fijada el <get name="date"/> a las <star index="2"/>
+
+            <think><srai>MARK OCUPADO AT <star index="2"/> ON <get name="date"/></srai></think>
+        </li>
+        <li>
+            La hora no se encuentra disponible, ¿quieres meter otra hora?
+        </li>
+
+    </condition>
+
+</template>
+</category>
+
+<category>
+<pattern>^</pattern><that>¿Cual quieres de la tarde</that>
+<template>
+    La hora no se encuentra disponible, ¿quieres meter otra hora?
+</template>
+</category>
+
+
+
+<category>
+<pattern>^ [no dejalo olvidalo negativo paso] ^ </pattern><that>La hora no se encuentra disponible, ¿quieres meter otra hora</that>
+<template>
+    Siento que no haya citas en esta fecha para usted, ¿quieres probar otra fecha?
+</template>
+</category>
+
+
+<category>
+<pattern> [Si De Vale Correcto Ok Hecho Claro Efectivamente Por esta Perfecto Estupendo Venga] </pattern><that>La hora no se encuentra disponible, ¿quieres meter otra hora</that>
+<template>
+    ¿Cual quieres de la tarde?
+</template>
+</category>
+
+<category>
+<pattern>^ <set>hour_lvl1_ta</set> ^</pattern><that>La hora no se encuentra disponible, ¿quieres meter otra hora</that>
+<template>
+    <think><set var="booleana"><srai>IS BUSY DAY <get name="date"/> AT <star index="2"/></srai></set></think>
+
+    <condition var="booleana">
+        
+        <li value="FALSE">
+            Perfecto, su cita ha sido fijada el <get name="date"/> a las <star index="2"/>
+
+            <think><srai>MARK OCUPADO AT <star index="2"/> ON <get name="date"/></srai></think>
+        </li>
+        <li>
+            La hora no se encuentra disponible, ¿quieres meter otra hora?
+        </li>
+
+    </condition>
+</template>
+</category>
+
+<category>
+<pattern>^</pattern><that>La hora no se encuentra disponible, ¿quieres meter otra hora</that>
+<template>
+    La hora no se encuentra disponible, ¿quieres meter otra hora
+</template>
+</category>
+
+<category>
+<pattern>^ <set>hour_lvl1_ta</set> ^</pattern><that>^ ¿Desea alguna</that>
+<template>
+     <think><set var="booleana"><srai>IS BUSY DAY <get name="date"/> AT <star index="2"/></srai></set></think>
+
+    <condition var="booleana">
+        
+        <li value="FALSE">
+            Perfecto, su cita ha sido fijada el <get name="date"/> a las <star index="2"/>
+
+            <think><srai>MARK OCUPADO AT <star index="2"/> ON <get name="date"/></srai></think>
+        </li>
+        <li>
+            La hora no se encuentra disponible, ¿quieres meter otra hora?
+        </li>
+
+    </condition>
+</template>
+</category>
+
+<category>
+<pattern>^</pattern><that>* ¿Desea alguna</that>
+<template>
+    La hora no se encuentra disponible, ¿quieres meter otra hora?
+</template>
+</category>
+
+<category>
+<pattern>^ [no dejalo olvidalo negativo paso] ^</pattern><that>* ¿Desea alguna</that>
+<template>
+    Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha
+</template>
+</category>
+
+<category>
+<pattern>Me da igual</pattern><that>* ¿Desea alguna</that>
+<template>
+    Pues nos vemos hente.
+</template>
+</category>
+
+
+
+<!-- SEPARACION TARDE Y MANIANA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->
+
+    <category>
+    <pattern>Me da igual</pattern><that>* ¿Desea alguna</that>
+    <template>
+        
+        <think>
+
+            <set name="val2"><first><get name="afternoon2"/></first></set>
+            <set name="afternoon2"><rest><get name="afternoon2"/></rest></set>
+
+        </think>
+
+        <condition name="val2">
+            
+            <li value="fin">Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha</li>
+            <li>
+                ¿Te viene bien a las <get name="val2"/>?
+            </li>
+
+        </condition>
+
+
+    </template>
+    </category>
+
+
+    <category>
+    <pattern>[Si De Vale Correcto Ok Hecho Claro Efectivamente Por esta Perfecto Estupendo Venga]</pattern><that>^ ¿Te viene bien a las ^</that>
+    <template>
+        
+        Perfecto, su cita ha sido fijada el <get name="date"/> a las <get name="val2"/>
+        <think><srai>MARK OCUPADO AT <get name="val2"/> ON <get name="date"/></srai></think>
+
+    </template>
+    </category>
+
+    <category>
+    <pattern>^ [no dejalo olvidalo negativo paso] ^</pattern><that>^ ¿Te viene bien a las ^</that>
+    <template>
+        
+        <think>
+
+            <set name="val2"><first><get name="afternoon2"/></first></set>
+            <set name="afternoon2"><rest><get name="afternoon2"/></rest></set>
+
+        </think>
+
+        <condition name="val2">
+            
+            <li value="fin">Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha</li>
+            <li>
+                ¿Te viene bien a las <get name="val2"/>?
+            </li>
+
+        </condition>
+
+    </template>
+    </category>
+
+
+
+
+<!-- NO SE PARTE DE LA MANIANA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->
+
+
+
+    <category>
+    <pattern>Me da igual</pattern><that>* ¿Quiere alguna</that>
+    <template>
+        
+        <think>
+
+            <set name="val"><first><get name="morning2"/></first></set>
+            <set name="morning2"><rest><get name="morning2"/></rest></set>
+
+        </think>
+
+        <condition name="val">
+            
+            <li value="fin">Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha</li>
+            <li>
+                ¿Te parece bien a las <get name="val"/>?
+            </li>
+
+        </condition>
+
+
+    </template>
+    </category>
+
+
+    <category>
+    <pattern>[Si De Vale Correcto Ok Hecho Claro Efectivamente Por esta Perfecto Estupendo Venga]</pattern><that>^ ¿Te parece bien a las ^</that>
+    <template>
+        
+        Perfecto, su cita ha sido fijada el <get name="date"/> a las <get name="val"/>
+        <think><srai>MARK OCUPADO AT <get name="val"/> ON <get name="date"/></srai></think>
+
+    </template>
+    </category>
+
+    <category>
+    <pattern>^ [no dejalo olvidalo negativo paso] ^</pattern><that>^ ¿Te parece bien a las ^</that>
+    <template>
+        
+        <think>
+
+            <set name="val"><first><get name="morning2"/></first></set>
+            <set name="morning2"><rest><get name="morning2"/></rest></set>
+
+        </think>
+
+        <condition name="val">
+            
+            <li value="fin">Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha</li>
+            <li>
+                ¿Te parece bien a las <get name="val"/>?
+            </li>
+
+        </condition>
+
+    </template>
+    </category>
+    
+
+
+
+
+
+<!-- NO SE PARTE DE LA MANIANA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->
+
+
+    <category>
+    <pattern>Me da igual</pattern><that>* ¿Desea alguna</that>
+    <template>
+        
+        <think>
+
+            <set name="valt"><first><get name="afternoon2"/></first></set>
+            <set name="afternoon2"><rest><get name="afternoon2"/></rest></set>
+
+        </think>
+
+        <condition name="valt">
+            
+            <li value="fin">Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha</li>
+            <li>
+                ¿Te viene bien a las <get name="valt"/>?
+            </li>
+
+        </condition>
+
+
+    </template>
+    </category>
+
+
+    <category>
+    <pattern>[Si De Vale Correcto Ok Hecho Claro Efectivamente Por esta Perfecto Estupendo Venga]</pattern><that>^ ¿Te viene bien a las ^</that>
+    <template>
+        
+        Perfecto, su cita ha sido fijada el <get name="date"/> a las <get name="valt"/>
+        <think><srai>MARK OCUPADO AT <get name="valt"/> ON <get name="date"/></srai></think>
+
+    </template>
+    </category>
+
+    <category>
+    <pattern>^ [no dejalo olvidalo negativo paso] ^</pattern><that>^ ¿Te viene bien a las ^</that>
+    <template>
+        
+        <think>
+
+            <set name="valt"><first><get name="afternoon2"/></first></set>
+            <set name="afternoon2"><rest><get name="afternoon2"/></rest></set>
+
+        </think>
+
+        <condition name="valt">
+            
+            <li value="fin">Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha</li>
+            <li>
+                ¿Te viene bien a las <get name="valt"/>?
+            </li>
+
+        </condition>
+
+    </template>
+    </category>
+
+
+
+<!-- NO SE PARTE DE LA TARDE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->
+
+
+
+
+<category>
+<pattern>[Si De Vale Correcto Ok Hecho Claro Efectivamente Por esta Perfecto Estupendo Venga] (acuerdo) (supuesto) (bien) </pattern><that>^ Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha</that>
+<template>
+    Me parece genial, dimela.
+</template>
+</category>
+
+
+<category>
+<pattern>^ [no dejalo olvidalo negativo paso] ^</pattern><that>^ Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha</that>
+<template>
+    Pues nos vemos mi hente.
+</template>
+</category>
+
+
+<category>
+<pattern>Validar Fecha <set>true_days</set></pattern>
+<template>
+    La fecha es True
+</template>
+</category>
+
+
+<category>
+<pattern>Validar Fecha *</pattern>
+<template>
+    La fecha es False
+</template>
+</category>
+
+
+<category>
+<pattern>Convertir a hora <set>hour</set></pattern>
+<template>
+            <think><set var="conversion"><map name="hour_index"><star/></map>:00</set></think>
+            <get var="conversion"/>
+</template>
+</category>
+
+<category>
+<pattern>Convertir a hora *</pattern>
+<template>
+            no es una hora valida
+</template>
+</category>
+
+<category>
+<pattern>Horas libres del *</pattern>
+<template>
+    <think>
+        <set var="contador">8</set>
+        <set var="salida"> </set>
+        <set var="estado"></set>
+        <set var="full">0</set>
+    </think>
+
+    <condition var="contador">
+        <li><value>20</value></li>
+        <li>
+            <think>
+                <set var="time"><srai>CONVERTIR A HORA <get var="contador"/></srai></set>
+                <set var="contador"><map name="successor"><get var="contador"/></map></set>
+                <set var="estado"><srai>IS BUSY DAY <star/> AT <get var="time"/></srai></set>
+            </think>
+
+            <condition var="estado">
+                <li value="FALSE">
+                    <think>
+                        <set var="salida"><get var="salida"/> <get var="time"/></set>
+                        <set var="full">1</set>
+                    </think>
+                </li>
+            </condition>
+
+            <loop/>
+        </li>
+    </condition>
+
+    <condition var="full">
+        <li><value>0</value>
+            ocupado
+        </li>
+        <li>
+            <get var="salida"/>
+        </li>
+    </condition>
+</template>
+</category>
+
+
+
+<category>
+<pattern>Convertir a hora *</pattern>
+<template>
+            no es una hora valida
+</template>
+</category>
+
+
+
+
+<!-- SEPARACION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<!-- NIVEL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<!-- 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<!-- NIVEL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<!-- 2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+
+
+<!-- ESPECIFICA DIA ^ <set>day</set> ^ <set>month_es</set> (de 2020) ^ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+
+<category>
+<pattern>^ <set>especifica_dia</set> ^</pattern>
+<template>
+
+
+    <think>
+    <set var="especifico"><star index="2"/></set>
+    <set var="auxiliar"><srai>day</srai></set>
+    <set var="salir">0</set>
+    </think>
+
+        <condition var="especifico">
+            
+            <li value="hoy">
+
+                <condition var="auxiliar">
+
+                    <li value="sabado">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li value="domingo">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li>
+                        <think>
+                        <set var="day1"><srai>date</srai></set>
+                        <set var="salir">1</set>
+                        </think>
+                    </li>
+
+                </condition>
+
+
+            </li>
+            <li value="maniana">
+
+                <condition var="auxiliar">
+
+                    <li value="viernes">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li value="sabado">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li>
+                        <think>
+                        <set var="day1"><srai>date tomorrow</srai></set>
+                        <set var="salir">1</set>
+                        </think>
+                    </li>
+
+                </condition>
+
+            </li>
+            <li> 
+
+                <condition var="auxiliar">
+
+                    <li value="jueves">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li value="viernes">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li>
+                        <think>
+                        <set var="day1"><srai>dayaftertomorrowdate</srai></set>
+                        <set var="salir">1</set>
+                        </think>
+                    </li>
+
+                </condition>
+
+
+                
+            </li>
+
+
+        </condition>
+
+
+        <condition var="salir">
+
+            <li><value>1</value>
+
+                <think>
+                <set var="tramo1"><first><get var="day1"/></first></set>
+                <set var="day1"><rest><get var="day1"/></rest></set>
+                <set var="tramo2"><first><get var="day1"/></first></set>
+                
+                </think>
+                <srai><get var="tramo1"/> <get var="tramo2"/></srai>
+
+            </li>
+    
+            
+        </condition>
+            
+</template>
+</category>
+
+
+<category>
+<pattern>^ [proximo siguiente] ^ <set>semana</set> ^</pattern>
+<template>
+
+    
+
+    <think>
+
+        <set var="day1"><srai>DATE ON <star index="3"/></srai></set>
+        <set var="tramo1"><first><get var="day1"/></first></set>
+        <set var="day1"><rest><get var="day1"/></rest></set>
+        <set var="tramo2"><first><get var="day1"/></first></set>
+
+    </think>
+
+    <srai><get var="tramo1"/> <get var="tramo2"/></srai>
+            
+</template>
+</category>
+
+<category>
+<pattern>^ [proximo siguiente] ^</pattern>
+<template>
+
+    Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+            
+</template>
+</category>
+
+<category>
+<pattern>^ <set>especifica_dia</set> ^ (por la) <set>m_t</set> </pattern>
+<template>
+
+    
+
+    <think>
+
+        <set var="especifico"><star index="2"/></set>
+        <set var="mot"><star index="4"/></set>
+
+        <condition var="especifico">
+            
+            <li value="hoy">
+                <set var="day1"><srai>date</srai></set>
+            </li>
+            <li value="maniana">
+                <set var="day1"><srai>date tomorrow</srai></set>
+            </li>
+            <li> 
+                <set var="day1"><srai>dayaftertomorrowdate</srai></set>
+            </li>
+
+
+        </condition>
+
+        <set var="tramo1"><first><get var="day1"/></first></set>
+        <set var="day1"><rest><get var="day1"/></rest></set>
+        <set var="tramo2"><first><get var="day1"/></first></set>
+        <set var="answer"><srai><get var="tramo1"/> <get var="tramo2"/></srai></set>
+
+    </think>
+
+    <condition name="total">
+        
+
+        <li><value>0</value>
+            <get var="answer"/>
+        </li>
+
+        <li><value>2</value>
+
+            <condition var="mot">
+
+                <li value="maniana">
+                    <get var="answer"/>
+                </li>
+
+                <li>
+                    Lo sentimos, solo hay por la maniana. Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                </li>
+
+
+            </condition>
+
+        </li>
+
+        <li><value>3</value>
+            
+            <condition var="mot">
+
+                <li value="tarde">
+                    <get var="answer"/>
+                </li>
+
+                <li>
+                    Lo sentimos, solo hay por la tarde. Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                </li>
+
+
+            </condition>
+
+
+        </li>
+
+        <li><value>5</value>
+
+            <condition var="mot">
+
+                <li value="maniana">
+                    Okay, las horas son: <get name="morning"/>
+
+
+    ¿Quiere alguna?
+                </li>
+
+                <li>
+                    De acuerdo, las horas son: <get name="afternoon"/>
+
+
+    ¿Desea alguna?
+                </li>
+
+
+            </condition>
+
+        </li>
+        <li>
+            Error
+        </li>
+
+    </condition>
+
+            
+</template>
+</category>
+
+
+<category>
+<pattern>^ [proximo siguiente] ^ <set>semana</set> ^ (por la) <set>m_t</set> </pattern>
+<template>
+
+    
+
+    <think>
+
+        <set var="day1"><srai>DATE ON <star index="3"/></srai></set>
+        <set var="tramo1"><first><get var="day1"/></first></set>
+        <set var="day1"><rest><get var="day1"/></rest></set>
+        <set var="tramo2"><first><get var="day1"/></first></set>
+        <set var="mot"><star index="5"/></set>
+        <set var="answer"><srai><get var="tramo1"/> <get var="tramo2"/></srai></set>
+
+    </think>
+
+    <condition name="total">
+        
+
+        <li><value>0</value>
+            <get var="answer"/>
+        </li>
+
+        <li><value>2</value>
+
+            <condition var="mot">
+
+                <li value="maniana">
+                    <get var="answer"/>
+                </li>
+
+                <li>
+                    Lo sentimos, solo hay por la maniana. Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                </li>
+
+
+            </condition>
+
+        </li>
+
+        <li><value>3</value>
+            
+            <condition var="mot">
+
+                <li value="tarde">
+                    <get var="answer"/>
+                </li>
+
+                <li>
+                    Lo sentimos, solo hay por la tarde. Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                </li>
+
+
+            </condition>
+
+
+        </li>
+
+        <li><value>5</value>
+
+            <condition var="mot">
+
+                <li value="maniana">
+                    Okay, las horas son: <get name="morning"/>
+
+
+    ¿Quiere alguna?
+                </li>
+
+                <li>
+                    De acuerdo, las horas son: <get name="afternoon"/>
+
+
+    ¿Desea alguna?
+                </li>
+
+
+            </condition>
+
+        </li>
+        <li>
+            Error
+        </li>
+
+    </condition>
+
+
+
+
+
+            
+</template>
+</category>
+
+
+
+
+
+
+
+<category>
+<pattern>^ <set>especifica_dia</set> ^ a las <set>hour_lvl2</set> ^ </pattern>
+<template>
+
+    <think>
+    <set var="especifico"><star index="2"/></set>
+    <set var="hour_aux"><star index="4"/></set>
+    <set var="auxiliar"><srai>day</srai></set>
+    <set var="salir">0</set>
+    </think>
+
+        <condition var="especifico">
+            
+            <li value="hoy">
+
+                <condition var="auxiliar">
+
+                    <li value="sabado">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li value="domingo">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li>
+                        <think>
+                        <set var="day1"><srai>date</srai></set>
+                        <set var="salir">1</set>
+                        </think>
+                    </li>
+
+                </condition>
+
+
+            </li>
+            <li value="maniana">
+
+                <condition var="auxiliar">
+
+                    <li value="viernes">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li value="sabado">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li>
+                        <think>
+                        <set var="day1"><srai>date tomorrow</srai></set>
+                        <set var="salir">1</set>
+                        </think>
+                    </li>
+
+                </condition>
+
+            </li>
+            <li> 
+
+                <condition var="auxiliar">
+
+                    <li value="jueves">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li value="viernes">
+                        Los findes no abrimos, siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li>
+                        <think>
+                        <set var="day1"><srai>dayaftertomorrowdate</srai></set>
+                        <set var="salir">1</set>
+                        </think>
+                    </li>
+
+                </condition>
+
+
+                
+            </li>
+
+
+        </condition>
+
+
+        <condition var="salir">
+
+            <li><value>1</value>
+
+                <think>
+                <set var="tramo1"><first><get var="day1"/></first></set>
+                <set var="day1"><rest><get var="day1"/></rest></set>
+                <set var="tramo2"><first><get var="day1"/></first></set>
+                
+
+                <set var="tramo2"><map name="month_index_ES"><get var="tramo2"/></map></set>
+                <set var="tramo1"><map name="day_index"><get var="tramo1"/></map></set>
+                <set name="date"><get var="tramo1"/>-<get var="tramo2"/>-20</set>
+                <set var="correcta"><srai>IS BUSY DAY <get name="date"/> AT <get var="hour_aux"/></srai></set>
+                </think>
+
+                
+
+                <condition var="correcta">
+                    
+                    <li value="TRUE">
+Esa hora esta ocupada. Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li>
+
+Perfecto, su cita ha sido fijada el <get name="date"/> a las <get var="hour_aux"/>
+                        <think><srai>MARK OCUPADO AT <get var="hour_aux"/> ON <get name="date"/></srai></think>
+
+                    </li>
+
+
+                </condition>
+
+
+            </li>
+    
+            
+        </condition>
+
+
+</template>
+</category>
+
+
+<category>
+<pattern>^ [proximo siguiente] ^ <set>semana</set> ^ a las <set>hour_lvl2</set> ^ </pattern>
+<template>
+
+    
+    <think>
+                <set var="day1"><srai>DATE ON <star index="3"/></srai></set>
+                <set var="tramo1"><first><get var="day1"/></first></set>
+                <set var="day1"><rest><get var="day1"/></rest></set>
+                <set var="tramo2"><first><get var="day1"/></first></set>
+                
+
+                <set var="tramo2"><map name="month_index_ES"><get var="tramo2"/></map></set>
+                <set var="tramo1"><map name="day_index"><get var="tramo1"/></map></set>
+                <set name="date"><get var="tramo1"/>-<get var="tramo2"/>-20</set>
+                <set var="correcta"><srai>IS BUSY DAY <get name="date"/> AT <star index="5"/></srai></set>
+    </think>
+
+                
+
+        <condition var="correcta">
+                    
+                    <li value="TRUE">
+Esa hora esta ocupada. Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    <li>
+
+Perfecto, su cita ha sido fijada el <get name="date"/> a las <star index="5"/>
+                        <think><srai>MARK OCUPADO AT <star index="5"/> ON <get name="date"/></srai></think>
+
+                    </li>
+
+
+                </condition>
+
+
+</template>
+</category>
+
+
+<category>
+<pattern>^ <set>day</set> ^ <set>month_es</set> (de 2020) ^ a las <set>hour_lvl2</set> ^ </pattern>
+<template>
+
+    
+    <think>
+                
+                <set var="tramo1"><star index="2"/></set>
+                <set var="tramo2"><star index="4"/></set>
+                
+
+                <set var="tramo2"><map name="month_index_ES"><get var="tramo2"/></map></set>
+                <set var="tramo1"><map name="day_index"><get var="tramo1"/></map></set>
+                <set name="date"><get var="tramo1"/>-<get var="tramo2"/>-20</set>
+                <set var="correcta"><srai>IS BUSY DAY <get name="date"/> AT <star index="6"/></srai></set>
+    </think>
+
+                
+
+        <condition var="correcta">
+                    
+                    <li value="FALSE">
+
+Perfecto, su cita ha sido fijada el <get name="date"/> a las <star index="6"/>
+                        <think><srai>MARK OCUPADO AT <star index="6"/> ON <get name="date"/></srai></think>
+
+                    </li>
+                    <li>
+Esa hora esta ocupada. Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                    </li>
+                    
+
+        </condition>
+
+
+</template>
+</category>
+
+
+<category>
+<pattern>^ <set>day</set> ^ <set>month_es</set> (de 2020) ^ (por la) <set>m_t</set> ^</pattern>
+<template>
+
+   <think>
+
+        <set var="mot"><star index="6"/></set>
+
+        <set var="tramo1"><star index="2"/></set>
+        <set var="tramo2"><star index="4"/></set>
+        <set name="date"><get var="tramo1"/>-<get var="tramo2"/>-20</set>
+        <set var="answer"><srai><get var="tramo1"/> <get var="tramo2"/></srai></set>
+
+    </think>
+
+    <condition name="total">
+        
+
+        <li><value>0</value>
+            <get var="answer"/>
+        </li>
+
+        <li><value>2</value>
+
+            <condition var="mot">
+
+                <li value="maniana">
+                    <get var="answer"/>
+                </li>
+
+                <li>
+                    Lo sentimos, solo hay por la maniana. Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                </li>
+
+
+            </condition>
+
+        </li>
+
+        <li><value>3</value>
+            
+            <condition var="mot">
+
+                <li value="tarde">
+                    <get var="answer"/>
+                </li>
+
+                <li>
+                    Lo sentimos, solo hay por la tarde. Siento que no haya citas en esta fecha para usted, ¿Quieres probar otra fecha?
+                </li>
+
+
+            </condition>
+
+
+        </li>
+
+        <li><value>5</value>
+
+            <condition var="mot">
+
+                <li value="maniana">
+                    Okay, las horas son: <get name="morning"/>
+
+
+    ¿Quiere alguna?
+                </li>
+
+                <li>
+                    De acuerdo, las horas son: <get name="afternoon"/>
+
+
+    ¿Desea alguna?
+                </li>
+
+
+            </condition>
+
+        </li>
+        <li>
+            Error
+        </li>
+
+    </condition>
+
+            
+</template>
+</category>
+
+
+
+
+
+
+</aiml>
+

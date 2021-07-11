@@ -1,0 +1,12 @@
+rojo 
+amarillo
+verde
+azul
+violeta
+naranja
+negro
+blanco
+lila
+gris
+magenta
+

@@ -1,0 +1,7 @@
+francia:paris
+espania:madrid
+italia:roma
+portugal:lisboa
+noruega:oslo
+alemania:berlin
+polonia:varsovia
